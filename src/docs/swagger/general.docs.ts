@@ -14,5 +14,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Welcome to the Epicron api/v1
+ *                   example: Welcome to the Mochi api/v1
  */
