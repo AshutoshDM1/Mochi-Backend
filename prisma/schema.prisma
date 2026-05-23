@@ -70,6 +70,17 @@ model User {
   username  String?  @unique // Clerk username (or email prefix)
   email     String   @unique
   crons     cron[]
+  apiKeys   ApiKey[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  hash      String   @unique // SHA-256 hashed API key
+  name      String   // Description/Name of the key (e.g. "Cursor IDE")
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
