@@ -66,9 +66,9 @@ model log {
 }
 
 model User {
-  id        String @id @default(uuid())
-  username  String @unique
-  email     String @unique
+  id        String   @id // Clerk User ID
+  username  String?  @unique // Clerk username (or email prefix)
+  email     String   @unique
   crons     cron[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

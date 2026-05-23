@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { userExists } from '../services/user.service';
+import { getAuth } from '@clerk/express';
 
 /**
- * Middleware to authenticate user by username in header
- * Expects 'x-username' header
+ * Middleware to authenticate user by Clerk session token.
+ * Expects Bearer token in the 'Authorization' header (handled by @clerk/express clerkMiddleware).
  */
 export const authenticateUser = async (
   req: Request,
@@ -11,35 +11,24 @@ export const authenticateUser = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // Get username from header
-    const username = req.headers['x-username'] as string;
+    const auth = getAuth(req);
+    const userId = auth.userId;
 
-    // Check if username is provided
-    if (!username) {
+    // Check if Clerk session is valid
+    if (!userId) {
       res.status(401).json({
         success: false,
-        message: 'Authentication required. Please provide username in x-username header.',
+        message: 'Authentication required. Please provide a valid Clerk token.',
         statusCode: 401,
       });
       return;
     }
 
-    // Check if user exists in database
-    const exists = await userExists(username);
+    // Attach user information to request object
+    req.auth = auth;
+    req.user = { id: userId };
+    req.username = undefined;
 
-    if (!exists) {
-      res.status(403).json({
-        success: false,
-        message: 'Invalid username. User not found.',
-        statusCode: 403,
-      });
-      return;
-    }
-
-    // Attach username to request object for use in controllers
-    (req as any).username = username;
-
-    // User is authenticated, proceed to next middleware
     next();
   } catch (error) {
     console.error('Authentication error:', error);
@@ -52,8 +41,7 @@ export const authenticateUser = async (
 };
 
 /**
- * Optional authentication - doesn't fail if no username provided
- * Useful for endpoints that work better with auth but don't require it
+ * Optional authentication - doesn't fail if no valid Clerk session provided
  */
 export const optionalAuth = async (
   req: Request,
@@ -61,13 +49,13 @@ export const optionalAuth = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const username = req.headers['x-username'] as string;
+    const auth = getAuth(req);
+    const userId = auth.userId;
 
-    if (username) {
-      const exists = await userExists(username);
-      if (exists) {
-        (req as any).username = username;
-      }
+    if (userId) {
+      req.auth = auth;
+      req.user = { id: userId };
+      req.username = undefined;
     }
 
     next();

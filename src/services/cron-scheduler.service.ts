@@ -49,7 +49,7 @@ async function executeCronJob(cronId: string, urlId: string, urlString: string):
           await sendEmail({
             to: urlRecord.cron.user.email,
             subject: `💀 Website Down: ${urlString}`,
-            userName: urlRecord.cron.user.username,
+            userName: urlRecord.cron.user.username ?? 'User',
             userEmail: urlRecord.cron.user.email,
             websiteUrl: urlString,
             currentStatus: result.status,

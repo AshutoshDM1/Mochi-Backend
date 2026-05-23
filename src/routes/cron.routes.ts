@@ -13,8 +13,8 @@ import {
 
 const router = Router();
 
-router.get('/', getCronController);
-router.get('/:id', validateSchema(getCronValidationById), getCronByIdController);
+router.get('/', authenticateUser, getCronController);
+router.get('/:id', authenticateUser, validateSchema(getCronValidationById), getCronByIdController);
 router.post('/', authenticateUser, validateSchema(createCronValidation), createCronController);
 router.delete('/:id', authenticateUser, validateSchema(deleteCronValidationById), deleteCronController);
 

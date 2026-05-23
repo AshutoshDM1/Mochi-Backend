@@ -1,25 +1,22 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { asyncHandler } from '../../utils/async-handler';
 import { prisma } from '../../lib/prisma';
 import APIResponseType from '../../types/response.type';
 import { scheduleCronJobById } from '../../services/cron-scheduler.service';
 
 const createCronController = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (req: Request, res: Response): Promise<void> => {
+
     const { interval } = req.body;
+
     const { url } = req.body;
-    const username = (req as any).username as string | undefined;
-
-    const user = username
-      ? await prisma.user.findUnique({ where: { username } })
-      : null;
-
+    const user = req.user;
     if (!user) {
-      res.status(403).json({
+      res.status(401).json({
         success: false,
-        message: 'Invalid username. User not found.',
+        message: 'Unauthorized. User session not found.',
         data: null,
-        statusCode: 403,
+        statusCode: 401,
       } as APIResponseType);
       return;
     }

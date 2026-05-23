@@ -1,13 +1,13 @@
 import { prisma } from '../lib/prisma';
 
-export async function createUser(username: string, email: string) {
+export async function createUser(id: string, username: string, email: string) {
   try {
     const existingUser = await prisma.user.findUnique({
-      where: { username },
+      where: { id },
     });
 
     if (existingUser) {
-      throw new Error(`User '${username}' already exists`);
+      throw new Error(`User ID '${id}' already exists`);
     }
 
     const existingEmail = await prisma.user.findUnique({
@@ -19,7 +19,7 @@ export async function createUser(username: string, email: string) {
     }
 
     const user = await prisma.user.create({
-      data: { username, email },
+      data: { id, username, email },
     });
 
     return user;

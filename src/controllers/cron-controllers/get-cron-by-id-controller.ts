@@ -1,14 +1,15 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { asyncHandler } from '../../utils/async-handler';
 import { prisma } from '../../lib/prisma';
 import APIResponseType from '../../types/response.type';
 
 const getCronByIdController = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
-    const cronData = await prisma.cron.findUnique({
-      where: { id },
+    const user = req.user;
+    const cronData = await prisma.cron.findFirst({
+      where: { id, userId: user.id },
       include: {
         url: {
           include: {

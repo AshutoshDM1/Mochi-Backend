@@ -1,11 +1,21 @@
+import type {} from './types/express';
 import express from 'express';
 import cors from 'cors';
+import { clerkMiddleware } from '@clerk/express';
+import { clerkWebhookHandler } from './webhooks/clerk';
 import route from './routes/route';
 import { setupSwagger } from './config/swagger.setup';
 import { initializeCronJobs, stopAllCronJobs } from './services/cron-scheduler.service';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+// Clerk webhook route must be registered before express.json() raw parser
+app.post(
+  '/webhooks/clerk',
+  express.raw({ type: 'application/json' }),
+  clerkWebhookHandler
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -13,8 +23,8 @@ app.use(
   cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-username', 'X-Username'],
-    exposedHeaders: ['Content-Type', 'Authorization', 'x-username', 'X-Username'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'authorization', 'x-username', 'X-Username'],
+    exposedHeaders: ['Content-Type', 'Authorization', 'authorization', 'x-username', 'X-Username'],
   })
 );
 
@@ -25,7 +35,7 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Welcome to the Epicron API' });
 });
 
-app.use('/api/v1', route);
+app.use('/api/v1', clerkMiddleware(), route);
 
 const server = app.listen(port, async () => {
   console.log(`Server is running on port http://localhost:${port}`);
