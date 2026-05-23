@@ -32,7 +32,7 @@ app.use(
 setupSwagger(app);
 
 app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Welcome to the Epicron API' });
+  res.status(200).json({ message: 'Welcome to the Mochi API' });
 });
 
 app.use('/api/v1', clerkMiddleware(), route);

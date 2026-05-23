@@ -33,7 +33,7 @@ interface WebsiteDownEmailParams {
 
 export const sendEmail = async (params: WebsiteDownEmailParams) => {
   const { data, error } = await resend.emails.send({
-    from: 'Epicron <alerts@support.elitedev.space>',
+    from: 'Mochi <alerts@support.elitedev.space>',
     to: [params.to],
     subject: params.subject,
     html: htmlTemplate(params),
@@ -88,7 +88,7 @@ const htmlTemplate = (params: WebsiteDownEmailParams) => {
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Epicron Alert</title>
+  <title>Mochi Alert</title>
 </head>
 <body style="margin:0;padding:0;background:#f4f5fb;font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;">
 
@@ -106,7 +106,7 @@ const htmlTemplate = (params: WebsiteDownEmailParams) => {
               <tr>
                 <td>
                   <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.70);margin-bottom:6px;">
-                    Epicron Monitor
+                    Mochi Monitor
                   </div>
                   <div style="font-size:22px;font-weight:700;color:#ffffff;line-height:1.2;">
                     ${isDown ? 'Website Down Alert' : 'Website Status Alert'}
@@ -222,7 +222,7 @@ const htmlTemplate = (params: WebsiteDownEmailParams) => {
         <!-- ── CTA ── -->
         <tr>
           <td style="padding:24px 32px 0;" align="center">
-            <a href="https://epicron.app" style="display:inline-block;background:#4C53D3;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;border-radius:8px;padding:12px 28px;">
+            <a href="https://mochi.elitedev.space" style="display:inline-block;background:#4C53D3;color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;border-radius:8px;padding:12px 28px;">
               View Dashboard →
             </a>
           </td>
@@ -232,8 +232,8 @@ const htmlTemplate = (params: WebsiteDownEmailParams) => {
         <tr>
           <td style="padding:24px 32px 28px;border-top:1px solid #f3f4f6;margin-top:24px;">
             <p style="margin:24px 0 0;font-size:12px;color:#9ca3af;line-height:1.6;text-align:center;">
-              This alert was sent to <b style="color:#6b7280;">${safe(params.userEmail)}</b> because you have an active monitor on Epicron.<br/>
-              <a href="https://epicron.app" style="color:#4C53D3;text-decoration:none;">Manage your monitors</a>
+              This alert was sent to <b style="color:#6b7280;">${safe(params.userEmail)}</b> because you have an active monitor on Mochi.<br/>
+              <a href="https://mochi.elitedev.space" style="color:#4C53D3;text-decoration:none;">Manage your monitors</a>
             </p>
           </td>
         </tr>

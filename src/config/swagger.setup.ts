@@ -9,7 +9,7 @@ export const setupSwagger = (app: Express): void => {
     swaggerUi.serve,
     swaggerUi.setup(swaggerSpec, {
       customCss: '.swagger-ui .topbar { display: none }',
-      customSiteTitle: 'Epicron API Documentation',
+      customSiteTitle: 'Mochi API Documentation',
     })
   );
 

@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Epicron API",
+    "title": "Mochi API",
     "version": "1.0.0",
     "description": "An Express + TypeScript backend with cron jobs for site monitoring",
     "contact": {
@@ -554,7 +554,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Welcome to the Epicron api/v1"
+                      "example": "Welcome to the Mochi api/v1"
                     }
                   }
                 }
