@@ -6,9 +6,13 @@ import { clerkWebhookHandler } from './webhooks/clerk';
 import route from './routes/route';
 import { setupSwagger } from './config/swagger.setup';
 import { initializeCronJobs, stopAllCronJobs } from './services/cron-scheduler.service';
+import { metricsMiddleware, register } from './middleware/metrics.middleware';
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Apply metrics middleware to trace all incoming requests
+app.use(metricsMiddleware);
 
 // Clerk webhook route must be registered before express.json() raw parser
 app.post(
@@ -33,6 +37,16 @@ setupSwagger(app);
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'Welcome to the Mochi API' });
+});
+
+// Metrics endpoint for Prometheus monitoring
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+  } catch (error) {
+    res.status(500).end(error instanceof Error ? error.message : 'Internal Server Error');
+  }
 });
 
 app.use('/api/v1', clerkMiddleware(), route);
